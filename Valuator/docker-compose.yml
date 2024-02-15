@@ -1,0 +1,18 @@
+﻿version: "3.9"
+
+services:
+  valuator:
+    container_name: valuator
+    image: valuator
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
