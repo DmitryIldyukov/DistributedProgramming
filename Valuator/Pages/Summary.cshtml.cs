@@ -12,11 +12,13 @@ public class SummaryModel : PageModel
 {
     private readonly ILogger<SummaryModel> _logger;
     private readonly IConnectionMultiplexer _redis;
+    private readonly IDatabase _db;
 
     public SummaryModel(ILogger<SummaryModel> logger, IConnectionMultiplexer redis)
     {
         _logger = logger;
         _redis = redis;
+        _db = _redis.GetDatabase();
     }
 
     public double Rank { get; set; }
@@ -24,10 +26,9 @@ public class SummaryModel : PageModel
 
     public void OnGet(string id)
     {
-        IDatabase db = _redis.GetDatabase();
         _logger.LogDebug(id);
 
-        Rank = double.Parse(db.StringGet($"RANK-{id}"));
-        Similarity = double.Parse(db.StringGet($"SIMILARITY-{id}"));
+        Rank = double.Parse(_db.StringGet($"RANK-{id}"));
+        Similarity = double.Parse(_db.StringGet($"SIMILARITY-{id}"));
     }
 }
